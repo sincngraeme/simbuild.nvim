@@ -11,7 +11,7 @@ Here is an example using my plugin manager '`simplug.nvim`'.
 
 ```lua
 return {
-    link = "sincngraeme/simbuild.nvim"
+    link = "sincngraeme/simbuild.nvim",
     config = function()
         require("simbuild").setup({
             ["Make"] = "make",
