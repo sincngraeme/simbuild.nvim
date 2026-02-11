@@ -7,7 +7,9 @@ M.config = {
 local define = function(name, command)
     vim.api.nvim_create_user_command(name, function(opts)
         if opts.bang then
-            vim.cmd('cgetexpr system(' .. command .. " " .. table.concat(opts.fargs, " "))
+            vim.system(table.insert(opts.fargs, command), { text = true }, function(output)
+                vim.cmd('cexpr ' .. output.stderr .. output.stdout)
+            end)
         else
             vim.cmd("new")
             vim.cmd("wincmd J")
