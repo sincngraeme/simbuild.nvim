@@ -6,18 +6,11 @@ M.config = {
 
 local define = function(name, command)
     vim.api.nvim_create_user_command(name, function(opts)
-        if opts.bang then
-            -- vim.system(table.insert(opts.fargs, command), { text = true }, function(output)
-            --     vim.cmd('cgetexpr ' .. output.stderr .. output.stdout)
-            -- end)
-            vim.cmd('cgetexpr ' .. vim.system(table.insert(opts.fargs, command)))
-        else
             vim.cmd("new")
             vim.cmd("wincmd J")
             vim.cmd("res 10")
             vim.cmd("term " .. command .. " " .. table.concat(opts.fargs, " "))
             vim.cmd("startinsert")
-        end
     end, { bang = true, nargs = "*" })
 end
 
