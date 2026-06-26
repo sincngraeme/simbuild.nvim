@@ -48,9 +48,7 @@ local function find_project_root(start_dir)
         return candidate
     end
 
-    local parent = dir:match("^(.*)/[^/]*$") -- go up one level
-    if not parent or parent == dir then break end
-    dir = parent
+    dir = dir:match("^(.*)/[^/]*$") -- go up one level
   end
 
   return nil
