@@ -86,6 +86,7 @@ function M.refresh()
     local root_dir = cfg_path and vim.fn.fnamemodify(cfg_path, ":h")
 
     if not cfg_path then
+        vim.notify("Simbuild: no config")
         clear_commands()
         return
     end
