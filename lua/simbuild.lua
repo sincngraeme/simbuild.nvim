@@ -44,6 +44,7 @@ local function find_project_root(start_dir)
   while dir do
     local candidate = dir .. "/" .. local_config_file
     local stat = uv.fs_stat(candidate)
+    print(vim.inspect(stat))
     if stat and stat.type == "file" then
         vim.notify("Simbuild: .simbuild.json found") 
         return candidate
