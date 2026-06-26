@@ -45,7 +45,8 @@ local function find_project_root(start_dir)
     local candidate = dir .. "/" .. local_config_file
     local stat = uv.fs_stat(candidate)
     if stat and stat.type == "file" then
-      return candidate
+        vim.notify("Simbuild: .simbuild.json found") 
+        return candidate
     end
 
     local parent = dir:match("^(.*)/[^/]*$") -- go up one level
@@ -95,6 +96,7 @@ function M.refresh()
     -- Define all the project-local user specified commands
     for name, command in pairs(M.local_config) do
         define(name, command)
+        vim.notify("Simbuild: added command '" .. name)
     end
 end
 
