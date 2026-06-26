@@ -8,12 +8,15 @@ M.config = {
 
 M.local_config = {}
 
-local function define(name, command)
+local function define(name, cmd, dir)
     vim.api.nvim_create_user_command(name, function(opts)
+            local prev = vim.uv.cwd()
             vim.cmd("new")
             vim.cmd("wincmd J")
             vim.cmd("res 10")
-            vim.cmd("term " .. command .. " " .. table.concat(opts.fargs, " "))
+            vim.uv.chdir(dir)
+            vim.cmd("term " .. cmd .. " " .. table.concat(opts.fargs, " "))
+            vim.uv.chdir(prev)
             vim.cmd("startinsert")
     end, { bang = true, nargs = "*" })
 end
@@ -31,10 +34,14 @@ function M.setup(user_config)
             end
         })
         -- Define all the user specified commands
-        for name, command in pairs(user_config) do
-            define(name, command)
+        for name, opts in pairs(user_config) do
+            define(name, opts[0], opts.dir or vim.uv.cwd())
         end
     end
+end
+
+local function get_parent_dir(path)
+    return path:match("^(.*)/[^/]*$")
 end
 
 local function find_project_root(start_dir)
@@ -47,7 +54,7 @@ local function find_project_root(start_dir)
         return candidate
     end
 
-    dir = dir:match("^(.*)/[^/]*$") -- go up one level
+    dir = get_parent_dir(dir) -- go up one level
   end
 
   return nil
@@ -83,19 +90,24 @@ end
 function M.refresh()
     local cfg_path = find_project_root(vim.uv.cwd())
     if not cfg_path then
-        vim.notify("Simbuild: no config")
         clear_commands()
         return
     end
 
-    vim.notify("Simbuild: " .. cfg_path)
     clear_commands()
     M.local_config = read_config(cfg_path)
 
     -- Define all the project-local user specified commands
-    for name, command in pairs(M.local_config) do
-        define(name, command)
-        vim.notify("Simbuild: added command '" .. name)
+    for name, opts in pairs(M.local_config) do
+        if type(opts) ~= "table" then 
+            vim.notify(
+                "Simbuild: Config error, expected table got " .. type(opts),
+                vim.log.levels.ERROR
+            )
+            return 
+        end
+        define(name, opts[0], opts.dir or get_parent_dir(cfg_path))
+        vim.notify("Simbuild: added command '" .. name .. "'")
     end
 end
 
