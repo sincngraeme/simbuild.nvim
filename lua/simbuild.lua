@@ -87,7 +87,7 @@ function M.refresh()
         return
     end
 
-    local M.local_config = read_config(cfg_path)
+    M.local_config = read_config(cfg_path)
     clear_commands()
 
     -- Define all the project-local user specified commands
