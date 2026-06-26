@@ -35,7 +35,7 @@ function M.setup(user_config)
         })
         -- Define all the user specified commands
         for name, opts in pairs(user_config) do
-            define(name, opts[0], opts.dir or vim.uv.cwd())
+            define(name, opts, vim.uv.cwd())
         end
     end
 end
@@ -98,15 +98,15 @@ function M.refresh()
     M.local_config = read_config(cfg_path)
 
     -- Define all the project-local user specified commands
-    for name, opts in pairs(M.local_config) do
-        if type(opts) ~= "table" then 
+    for name, cmd in pairs(M.local_config) do
+        if type(cmd) ~= "table" then 
             vim.notify(
-                "Simbuild: Config error, expected table got " .. type(opts),
+                "Simbuild: Config error, expected table got " .. type(cmd),
                 vim.log.levels.ERROR
             )
             return 
         end
-        define(name, opts[0], opts.dir or get_parent_dir(cfg_path))
+        define(name, cmd, get_parent_dir(cfg_path))
         vim.notify("Simbuild: added command '" .. name .. "'")
     end
 end
