@@ -95,13 +95,6 @@ function M.refresh()
 
     -- Define all the project-local user specified commands
     for name, cmd in pairs(M.local_config) do
-        if type(cmd) ~= "table" then 
-            vim.notify(
-                "Simbuild: Config error, expected table got " .. type(cmd),
-                vim.log.levels.ERROR
-            )
-            return 
-        end
         define(name, cmd, get_parent_dir(cfg_path))
         vim.notify("Simbuild: added command '" .. name .. "'")
     end
