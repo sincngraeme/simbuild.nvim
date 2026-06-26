@@ -89,8 +89,8 @@ function M.refresh()
     end
 
     vim.notify("Simbuild: " .. cfg_path)
-    M.local_config = read_config(cfg_path)
     clear_commands()
+    M.local_config = read_config(cfg_path)
 
     -- Define all the project-local user specified commands
     for name, command in pairs(M.local_config) do
