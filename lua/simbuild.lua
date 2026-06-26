@@ -10,19 +10,21 @@ M.local_config = {}
 
 local function define(name, cmd, dir)
     vim.api.nvim_create_user_command(name, function(opts)
-            local prev = vim.uv.cwd()
+        local prev = vim.uv.cwd()
         if opts.bang then
             vim.cmd("tabnew")
-            vim.cmd("tabnext -1")
+            vim.cmd("tabprev")
         else
             vim.cmd("new")
             vim.cmd("wincmd J")
             vim.cmd("res 10")
         end
-            vim.uv.chdir(dir)
-            vim.cmd("term " .. cmd .. " " .. table.concat(opts.fargs, " "))
-            vim.uv.chdir(prev)
+        vim.uv.chdir(dir)
+        vim.cmd("term " .. cmd .. " " .. table.concat(opts.fargs, " "))
+        vim.uv.chdir(prev)
+        if not opts.bang then
             vim.cmd("startinsert")
+        end
     end, { bang = true, nargs = "*" })
 end
 
