@@ -77,12 +77,12 @@ local function clear_commands()
 end
 
 function M.refresh()
-    local buf = vim.api.nvim_get_current_buf()
-    local name = vim.api.nvim_buf_get_name(buf)
-    if name == "" then return end
+    -- local buf = vim.api.nvim_get_current_buf()
+    -- local name = vim.api.nvim_buf_get_name(buf)
+    -- if name == "" then return end
 
-    local dir = vim.fn.fnamemodify(name, ":p:h")
-    local cfg_path = find_project_root(dir)
+    -- local dir = vim.fn.fnamemodify(name, ":p:h")
+    local cfg_path = find_project_root(vim.uv.cwd())
     local root_dir = cfg_path and vim.fn.fnamemodify(cfg_path, ":h")
 
     if not cfg_path then
