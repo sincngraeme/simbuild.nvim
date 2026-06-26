@@ -89,12 +89,8 @@ end
 
 function M.refresh()
     local cfg_path = find_project_root(vim.uv.cwd())
-    if not cfg_path then
-        clear_commands()
-        return
-    end
-
     clear_commands()
+    if not cfg_path then return end
     M.local_config = read_config(cfg_path)
 
     -- Define all the project-local user specified commands
