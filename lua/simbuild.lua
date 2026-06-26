@@ -1,5 +1,7 @@
 local M = {}
 
+local local_config_file = ".simplug.json"
+
 M.config = {
     ["Make"] = "make",
 }
@@ -40,7 +42,7 @@ local function find_project_root(start_dir)
   local dir = start_dir
 
   while dir do
-    local candidate = dir .. "/.simplug.json"
+    local candidate = dir .. "/" .. local_config_file
     local stat = uv.fs_stat(candidate)
     if stat and stat.type == "file" then
       return candidate
