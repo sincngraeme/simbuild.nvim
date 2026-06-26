@@ -54,15 +54,23 @@ local function find_project_root(start_dir)
 end
 
 local function read_config(path)
-  local lines = vim.fn.readfile(path)
-  if not lines or #lines == 0 then return nil end
-  local text = table.concat(lines, "\n")
-  local ok, decoded = pcall(vim.fn.json_decode, text)
-  if not ok then
-    vim.notify("Simbuild: invalid JSON in " .. path, vim.log.levels.ERROR)
+    -- Open
+    local f = io.open(path, "r") 
+    if f then 
+        -- Read full file
+        local content = f:read("*a") 
+        f:close()
+        -- check for nil or false and length <= 0
+        if content and #content > 0 then 
+            local ok, decoded = pcall(vim.fn.json_decode, content)
+            if ok and type(decoded) == "table" then -- success and correct type
+                return decoded 
+            else
+                vim.notify("Simbuild: invalid JSON in " .. path, vim.log.levels.ERROR)
+            end
+        end
+    end
     return nil
-  end
-  return decoded
 end 
 
 local function clear_commands()
@@ -82,7 +90,6 @@ function M.refresh()
 
     vim.notify("Simbuild: " .. cfg_path)
     M.local_config = read_config(cfg_path)
-    print(vim.inspect( M.local_config ))
     clear_commands()
 
     -- Define all the project-local user specified commands
