@@ -1,6 +1,6 @@
 local M = {}
 
-local local_config_file = ".simplug.json"
+local local_config_file = ".simbuild.json"
 
 M.config = {
     ["Make"] = "make",
@@ -44,7 +44,7 @@ local function find_project_root(start_dir)
   while dir do
     local candidate = dir .. "/" .. local_config_file
     if vim.fn.filereadable(candidate) then
-        vim.notify("Simbuild: .simbuild.json found") 
+        vim.notify("Simbuild: " .. local_config_file .. " found") 
         return candidate
     end
 
@@ -62,7 +62,7 @@ local function read_config(path)
   local text = table.concat(lines, "\n")
   local ok, decoded = pcall(vim.fn.json_decode, text)
   if not ok then
-    vim.notify("simplug: invalid JSON in " .. path, vim.log.levels.ERROR)
+    vim.notify("Simbuild: invalid JSON in " .. path, vim.log.levels.ERROR)
     return nil
   end
   return decoded
