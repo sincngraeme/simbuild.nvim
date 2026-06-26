@@ -13,7 +13,7 @@ local function define(name, cmd, dir)
             local prev = vim.uv.cwd()
         if opts.bang then
             vim.cmd("tabnew")
-            vim.cmd("wincmd p")
+            vim.cmd("tabnext -1")
         else
             vim.cmd("new")
             vim.cmd("wincmd J")
