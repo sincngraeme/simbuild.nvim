@@ -4,6 +4,8 @@ M.config = {
     ["Make"] = "make",
 }
 
+M.local_config = {}
+
 local function define(name, command)
     vim.api.nvim_create_user_command(name, function(opts)
             vim.cmd("new")
@@ -62,6 +64,13 @@ local function read_config(path)
     return nil
   end
   return decoded
+end 
+
+local function clear_commands()
+    for name, _ in pairs(M.local_config) do
+        pcall(vim.api.nvim_del_user_command, name)
+    end
+    M.local_config = {}
 end
 
 function M.refresh()
@@ -78,10 +87,11 @@ function M.refresh()
         return
     end
 
-    local config = read_config(cfg_path)
+    local M.local_config = read_config(cfg_path)
+    clear_commands()
 
     -- Define all the project-local user specified commands
-    for name, command in pairs(config) do
+    for name, command in pairs(M.local_config) do
         define(name, command)
     end
 end
