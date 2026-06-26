@@ -82,8 +82,6 @@ function M.refresh()
 
     -- local dir = vim.fn.fnamemodify(name, ":p:h")
     local cfg_path = find_project_root(vim.uv.cwd())
-    local root_dir = cfg_path and vim.fn.fnamemodify(cfg_path, ":h")
-
     if not cfg_path then
         vim.notify("Simbuild: no config")
         clear_commands()
