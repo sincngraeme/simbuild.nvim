@@ -50,7 +50,6 @@ local function find_project_root(start_dir)
   while dir do
     local candidate = dir .. "/" .. local_config_file
     if vim.fn.filereadable(candidate) == 1 then
-        vim.notify("Simbuild: " .. local_config_file .. " found") 
         return candidate
     end
 
