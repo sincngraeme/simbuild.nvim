@@ -76,11 +76,6 @@ local function clear_commands()
 end
 
 function M.refresh()
-    -- local buf = vim.api.nvim_get_current_buf()
-    -- local name = vim.api.nvim_buf_get_name(buf)
-    -- if name == "" then return end
-
-    -- local dir = vim.fn.fnamemodify(name, ":p:h")
     local cfg_path = find_project_root(vim.uv.cwd())
     if not cfg_path then
         vim.notify("Simbuild: no config")
@@ -88,6 +83,7 @@ function M.refresh()
         return
     end
 
+    vim.notify("Simbuild: " .. cfg_path)
     M.local_config = read_config(cfg_path)
     clear_commands()
 
