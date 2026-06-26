@@ -43,7 +43,7 @@ local function find_project_root(start_dir)
 
   while dir do
     local candidate = dir .. "/" .. local_config_file
-    if vim.fn.filereadable() then
+    if vim.fn.filereadable(candidate) then
         vim.notify("Simbuild: .simbuild.json found") 
         return candidate
     end
