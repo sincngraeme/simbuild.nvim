@@ -13,7 +13,6 @@ local function define(name, cmd, dir)
         local prev = vim.uv.cwd()
         if opts.bang then
             vim.cmd("tabnew")
-            vim.cmd("tabprev")
         else
             vim.cmd("new")
             vim.cmd("wincmd J")
@@ -22,7 +21,9 @@ local function define(name, cmd, dir)
         vim.uv.chdir(dir)
         vim.cmd("term " .. cmd .. " " .. table.concat(opts.fargs, " "))
         vim.uv.chdir(prev)
-        if not opts.bang then
+        if opts.bang then
+            vim.cmd("tabprev")
+        else
             vim.cmd("startinsert")
         end
     end, { bang = true, nargs = "*" })
