@@ -18,6 +18,22 @@ local function define(name, cmd, dir)
             vim.cmd("wincmd J")
             vim.cmd("res 10")
         end
+
+        -- register autocmd for the current buffer on close
+        local buf = vim.api.nvim_get_current_buf()
+        vim.notify("Opening terminal buffer: " .. buf, vim.log.levels.DEBUG)
+
+        vim.api.nvim_create_autocmd("TermClose", {
+            group = M.group,
+            once = true,
+            callback = function(ev)
+                vim.notify("Closing buffer: " .. buf, vim.log.levels.DEBUG)
+                if ev.buf == buf then
+                    vim.cmd('cgetexpr getline(1, "$")')
+                end
+            end
+        })
+
         vim.uv.chdir(dir)
         vim.cmd("term " .. cmd .. " " .. table.concat(opts.fargs, " "))
         vim.uv.chdir(prev)
@@ -30,21 +46,13 @@ local function define(name, cmd, dir)
 end
 
 function M.setup(user_config)
-    if not user_config then
-        vim.notify("No config found for plugin: Simbuild", vim.log.levels.ERROR)
-    else
-        M.config = user_config
-        -- Setup the autocmd to populate the quickfix with the results of the build in the terminal buffer
-        vim.api.nvim_create_autocmd("TermClose", {
-            -- pattern = { "Simbuild" },
-            callback = function()
-                vim.cmd('cgetexpr getline(1, "$")')
-            end
-        })
-        -- Define all the user specified commands
-        for name, opts in pairs(user_config) do
-            define(name, opts, vim.uv.cwd())
-        end
+    if user_config then M.config = user_config end
+
+    -- Setup the autocmd to populate the quickfix with the results of the build in the terminal buffer
+    M.group = vim.api.nvim_create_augroup("Simbuild", { clear = true})
+    -- Define all the user specified commands
+    for name, opts in pairs(M.config) do
+        define(name, opts, vim.uv.cwd())
     end
 end
 
