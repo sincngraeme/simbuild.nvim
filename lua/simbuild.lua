@@ -25,7 +25,6 @@ local function define(name, cmd, dir)
 
         vim.api.nvim_create_autocmd("TermClose", {
             group = M.group,
-            -- buf = buf,
             once = true,
             callback = function(ev)
                 vim.notify("Closing buffer: " .. buf, vim.log.levels.DEBUG)
